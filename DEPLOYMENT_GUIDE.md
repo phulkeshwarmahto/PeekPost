@@ -95,7 +95,7 @@ Ensure your `server/.env` has the proper structure (we'll set values in Render):
 
 ```env
 PORT=5000
-DB_URI=mongodb+srv://...
+DB_URI=const uri = "mongodb+srv://pkmahto009_db_user:<mongodb+srv://pkmahto009_db_user:a7HqMp0qHc8HA81e@callus.wdcsjbc.mongodb.net/?appName=callUs;
 REDIS_URL=redis://...
 JWT_SECRET=your_secret_key
 CLOUDINARY_NAME=your_name
@@ -127,7 +127,7 @@ Fill in the following:
 - **Name:** `peekpost-api` (or your preferred name)
 - **Environment:** `Node`
 - **Region:** Select closest to your users
-- **Build Command:** `npm install --prefix server`
+- **Build Command:** `npm install --prefix server && npm run build --prefix server`
 - **Start Command:** `node server/server.js`
 - **Plan:** `Free` (or upgrade to `Starter` for better performance)
 
