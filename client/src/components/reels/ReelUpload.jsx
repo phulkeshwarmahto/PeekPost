@@ -14,17 +14,17 @@ const ReelUpload = ({ onUploaded }) => {
   };
 
   return (
-    <section className="card">
-      <h3>Upload Reel</h3>
+    <section className="card" style={{ padding: 16 }}>
+      <h3 style={{ margin: "0 0 10px" }}>Upload Reel</h3>
       <form onSubmit={submit} style={{ display: "grid", gap: "0.5rem" }}>
-        <input className="input" value={videoUrl} onChange={(event) => setVideoUrl(event.target.value)} />
+        <input className="ig-input" value={videoUrl} onChange={(event) => setVideoUrl(event.target.value)} />
         <input
-          className="input"
+          className="ig-input"
           placeholder="Caption"
           value={caption}
           onChange={(event) => setCaption(event.target.value)}
         />
-        <button className="btn-primary" type="submit">
+        <button className="ig-btn-primary" type="submit">
           Publish Reel
         </button>
       </form>

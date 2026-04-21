@@ -19,21 +19,25 @@ const Notifications = () => {
   }, []);
 
   return (
-    <div style={{ display: "grid", gap: "1rem" }}>
-      <div className="card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h3 style={{ margin: 0 }}>Notifications</h3>
-        <button
-          type="button"
-          className="btn-ghost"
-          onClick={async () => {
-            await api.post("/notifications/mark-all-read");
-            load();
-          }}
-        >
-          Mark all read
-        </button>
-      </div>
-      <NotificationPanel items={items} />
+    <div className="ig-notifications-shell">
+      <NotificationPanel
+        items={items}
+        onMarkAllRead={async () => {
+          await api.post("/notifications/mark-all-read");
+          load();
+        }}
+      />
+
+      <section className="ig-notification-canvas">
+        <div>
+          <div style={{ fontSize: 82, marginBottom: 12 }}>?</div>
+          <h2 style={{ margin: 0, fontWeight: 500 }}>Your Messages</h2>
+          <p className="ig-muted">Send private photos and messages to a friend or group.</p>
+          <button className="ig-btn-primary" type="button">
+            Send Message
+          </button>
+        </div>
+      </section>
     </div>
   );
 };

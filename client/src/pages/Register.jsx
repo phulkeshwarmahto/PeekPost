@@ -25,43 +25,48 @@ const Register = () => {
   };
 
   return (
-    <section className="card" style={{ maxWidth: 420, margin: "4rem auto" }}>
-      <h2>Register</h2>
-      <form style={{ display: "grid", gap: "0.6rem" }} onSubmit={submit}>
-        <input
-          className="input"
-          placeholder="Username"
-          value={form.username}
-          onChange={(event) => setForm((prev) => ({ ...prev, username: event.target.value }))}
-        />
-        <input
-          className="input"
-          placeholder="Email"
-          value={form.email}
-          onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
-        />
-        <input
-          className="input"
-          placeholder="Full name"
-          value={form.fullName}
-          onChange={(event) => setForm((prev) => ({ ...prev, fullName: event.target.value }))}
-        />
-        <input
-          className="input"
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
-        />
-        <button className="btn-primary" type="submit" disabled={loading}>
-          {loading ? "Creating account..." : "Create Account"}
-        </button>
-      </form>
-      {error && <p style={{ color: "#b5122f" }}>{error}</p>}
-      <p>
-        Already have an account? <Link to="/login">Sign in</Link>
-      </p>
-    </section>
+    <div className="ig-auth-page">
+      <section className="ig-auth-card">
+        <h1 className="ig-auth-logo">Instagram</h1>
+
+        <form className="ig-auth-form" onSubmit={submit}>
+          <input
+            className="ig-input"
+            placeholder="Mobile Number or Email"
+            value={form.email}
+            onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
+          />
+          <input
+            className="ig-input"
+            placeholder="Full Name"
+            value={form.fullName}
+            onChange={(event) => setForm((prev) => ({ ...prev, fullName: event.target.value }))}
+          />
+          <input
+            className="ig-input"
+            placeholder="Username"
+            value={form.username}
+            onChange={(event) => setForm((prev) => ({ ...prev, username: event.target.value }))}
+          />
+          <input
+            className="ig-input"
+            type="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
+          />
+          <button className="ig-btn-primary" type="submit" disabled={loading}>
+            {loading ? "Creating account..." : "Sign up"}
+          </button>
+        </form>
+
+        {error && <p style={{ color: "#d62976", marginTop: 12 }}>{error}</p>}
+
+        <p style={{ marginTop: 18, fontSize: 14 }}>
+          Have an account? <Link className="ig-link" to="/login">Log in</Link>
+        </p>
+      </section>
+    </div>
   );
 };
 

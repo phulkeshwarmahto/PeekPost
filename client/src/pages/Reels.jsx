@@ -17,7 +17,7 @@ const Reels = () => {
   }, []);
 
   return (
-    <div style={{ display: "grid", gap: "1rem" }}>
+    <div className="ig-reels-wrap">
       <ReelUpload onUploaded={load} />
       {items.map((item) => (
         <ReelCard key={item._id} reel={item} />

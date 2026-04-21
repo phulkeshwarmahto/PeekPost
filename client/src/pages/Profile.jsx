@@ -26,13 +26,21 @@ const Profile = () => {
   }, [user?.username]);
 
   if (!profile) {
-    return <div className="card">Loading profile...</div>;
+    return <div className="card" style={{ padding: 20 }}>Loading profile...</div>;
   }
 
   return (
-    <div style={{ display: "grid", gap: "1rem" }}>
-      <ProfileHeader profile={profile} />
-      <Highlights />
+    <div className="ig-profile-wrap">
+      <ProfileHeader profile={profile} postsCount={posts.length} />
+      <Highlights posts={posts} />
+
+      <div className="ig-profile-tabs">
+        <span className="ig-profile-tab active">Posts</span>
+        <span className="ig-profile-tab">Reels</span>
+        <span className="ig-profile-tab">Saved</span>
+        <span className="ig-profile-tab">Tagged</span>
+      </div>
+
       <PostGrid posts={posts} />
     </div>
   );

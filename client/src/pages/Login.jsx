@@ -20,25 +20,36 @@ const Login = () => {
   };
 
   return (
-    <section className="card" style={{ maxWidth: 420, margin: "4rem auto" }}>
-      <h2>Login</h2>
-      <form style={{ display: "grid", gap: "0.6rem" }} onSubmit={submit}>
-        <input className="input" value={emailOrUsername} onChange={(event) => setEmailOrUsername(event.target.value)} />
-        <input
-          className="input"
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-        />
-        <button className="btn-primary" type="submit" disabled={loading}>
-          {loading ? "Signing in..." : "Sign In"}
-        </button>
-      </form>
-      {error && <p style={{ color: "#b5122f" }}>{error}</p>}
-      <p>
-        New here? <Link to="/register">Create an account</Link>
-      </p>
-    </section>
+    <div className="ig-auth-page">
+      <section className="ig-auth-card">
+        <h1 className="ig-auth-logo">Instagram</h1>
+
+        <form className="ig-auth-form" onSubmit={submit}>
+          <input
+            className="ig-input"
+            value={emailOrUsername}
+            onChange={(event) => setEmailOrUsername(event.target.value)}
+            placeholder="Phone number, username, or email"
+          />
+          <input
+            className="ig-input"
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="Password"
+          />
+          <button className="ig-btn-primary" type="submit" disabled={loading}>
+            {loading ? "Signing in..." : "Log in"}
+          </button>
+        </form>
+
+        {error && <p style={{ color: "#d62976", marginTop: 12 }}>{error}</p>}
+
+        <p style={{ marginTop: 18, fontSize: 14 }}>
+          Don&apos;t have an account? <Link className="ig-link" to="/register">Sign up</Link>
+        </p>
+      </section>
+    </div>
   );
 };
 

@@ -3,13 +3,19 @@ import { useDispatch, useSelector } from "react-redux";
 
 import ChatList from "../components/messages/ChatList";
 import ChatWindow from "../components/messages/ChatWindow";
-import { addMessage, setActiveConversation, setConversations, setMessages } from "../redux/slices/messageSlice";
+import {
+  addMessage,
+  setActiveConversation,
+  setConversations,
+  setMessages,
+} from "../redux/slices/messageSlice";
 import { api } from "../services/api";
 import { useSocket } from "../hooks/useSocket";
 
 const Messages = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.accessToken);
+  const user = useSelector((state) => state.auth.user);
   const { conversations, activeConversationId, messages } = useSelector((state) => state.message);
   const [draft, setDraft] = useState("");
 
@@ -49,22 +55,34 @@ const Messages = () => {
 
   useSocket(token, handlers);
 
+  const activeConversation = conversations.find((conversation) => conversation._id === activeConversationId) || null;
+
   const send = async () => {
     if (!draft.trim() || !activeConversationId) return;
 
-    const { data } = await api.post(`/messages/conversations/${activeConversationId}`, { text: draft.trim() });
+    const { data } = await api.post(`/messages/conversations/${activeConversationId}`, {
+      text: draft.trim(),
+    });
     dispatch(addMessage(data));
     setDraft("");
   };
 
   return (
-    <div className="grid-2">
+    <div className="ig-messages-shell">
       <ChatList
         conversations={conversations}
         activeConversationId={activeConversationId}
         onSelect={(conversationId) => dispatch(setActiveConversation(conversationId))}
+        currentUserId={user?.id}
       />
-      <ChatWindow messages={messages} draft={draft} onDraftChange={setDraft} onSend={send} />
+      <ChatWindow
+        messages={messages}
+        draft={draft}
+        onDraftChange={setDraft}
+        onSend={send}
+        currentUserId={user?.id}
+        activeConversation={activeConversation}
+      />
     </div>
   );
 };

@@ -1,17 +1,20 @@
-const PostGrid = ({ posts = [] }) => (
-  <section className="card">
-    <h3>Posts</h3>
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
+const PostGrid = ({ posts = [] }) => {
+  const minimumTiles = 12;
+  const placeholders = Array.from({ length: Math.max(0, minimumTiles - posts.length) });
+
+  return (
+    <section className="ig-post-grid">
       {posts.map((post) => (
-        <img
-          key={post._id}
-          src={post.media?.[0]?.url}
-          alt={post.caption || "post"}
-          style={{ width: "100%", aspectRatio: "1 / 1", objectFit: "cover", borderRadius: 10 }}
-        />
+        <div key={post._id} className="ig-post-tile">
+          <img src={post.media?.[0]?.url} alt={post.caption || "post"} />
+        </div>
       ))}
-    </div>
-  </section>
-);
+
+      {placeholders.map((_, index) => (
+        <div key={`placeholder-${index}`} className="ig-post-tile" />
+      ))}
+    </section>
+  );
+};
 
 export default PostGrid;

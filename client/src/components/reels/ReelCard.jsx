@@ -1,19 +1,39 @@
 const ReelCard = ({ reel }) => {
   if (reel.isAd) {
     return (
-      <article className="card">
-        <small style={{ color: "#b5122f", fontWeight: 700 }}>Reel Ad</small>
-        <h4>{reel.title}</h4>
-        <img src={reel.imageUrl} alt={reel.title} style={{ width: "100%", borderRadius: 12 }} />
+      <article className="ig-reel-card">
+        <div className="ig-feed-header">
+          <div className="ig-feed-user">
+            <img className="ig-feed-avatar" src={reel.imageUrl} alt={reel.title} />
+            <div>
+              <div className="ig-feed-username">Sponsored</div>
+              <div className="ig-feed-sub">Reel ad</div>
+            </div>
+          </div>
+        </div>
+        <img className="ig-feed-media" src={reel.imageUrl} alt={reel.title} />
       </article>
     );
   }
 
   return (
-    <article className="card" style={{ display: "grid", gap: "0.6rem" }}>
-      <h4 style={{ margin: 0 }}>{`@${reel.author?.username || "user"}`}</h4>
-      <video controls src={reel.videoUrl} style={{ width: "100%", borderRadius: 12, maxHeight: 420 }} />
-      <p style={{ margin: 0 }}>{reel.caption}</p>
+    <article className="ig-reel-card">
+      <div className="ig-feed-header">
+        <div className="ig-feed-user">
+          <img
+            className="ig-feed-avatar"
+            src={reel.author?.avatar || "https://placehold.co/64x64?text=U"}
+            alt={reel.author?.username}
+          />
+          <div className="ig-feed-username">{reel.author?.username || "user"}</div>
+        </div>
+      </div>
+
+      <video controls src={reel.videoUrl} style={{ width: "100%", maxHeight: 650, background: "#000" }} />
+
+      <div className="ig-feed-meta">
+        <strong>{reel.caption || "No caption"}</strong>
+      </div>
     </article>
   );
 };

@@ -19,18 +19,17 @@ const Explore = () => {
   }, []);
 
   return (
-    <div style={{ display: "grid", gap: "1rem" }}>
+    <div className="ig-explore-wrap">
       <ExploreSearch />
-      <section className="card">
-        <h3>Trending hashtags</h3>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-          {trending.map((tag) => (
-            <span key={tag.tag} className="btn-ghost" style={{ borderRadius: "999px", padding: "0.35rem 0.7rem" }}>
-              #{tag.tag} ({tag.count})
-            </span>
-          ))}
-        </div>
-      </section>
+
+      <div className="ig-tags">
+        {trending.slice(0, 12).map((tag) => (
+          <span key={tag.tag} className="ig-tag">
+            #{tag.tag} ({tag.count})
+          </span>
+        ))}
+      </div>
+
       <ExploreGrid items={items} />
     </div>
   );
