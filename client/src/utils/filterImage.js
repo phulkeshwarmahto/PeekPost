@@ -1,0 +1,1 @@
+export const filterImage = (url, _style = "normal") => url;

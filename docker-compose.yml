@@ -1,0 +1,43 @@
+services:
+  mongodb:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  server:
+    build:
+      context: ./server
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - MONGO_URI=mongodb://mongodb:27017/peekpost
+      - REDIS_URL=redis://redis:6379
+      - CLIENT_URL=http://localhost:5173
+      - JWT_SECRET=dev_secret
+      - JWT_REFRESH_SECRET=dev_refresh_secret
+    depends_on:
+      - mongodb
+      - redis
+
+  client:
+    build:
+      context: ./client
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:5000/api
+      - VITE_SOCKET_URL=http://localhost:5000
+    depends_on:
+      - server
+
+volumes:
+  mongo_data:

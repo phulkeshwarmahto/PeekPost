@@ -1,0 +1,82 @@
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+import { api, setAuthToken } from "../../services/api";
+import { connectSocket, disconnectSocket } from "../../socket/socket";
+
+const initialToken = localStorage.getItem("peekpost_access_token") || "";
+const initialUser = localStorage.getItem("peekpost_user");
+
+if (initialToken) {
+  setAuthToken(initialToken);
+  connectSocket(initialToken);
+}
+
+export const login = createAsyncThunk("auth/login", async (payload) => {
+  const { data } = await api.post("/auth/login", payload);
+  return data;
+});
+
+export const register = createAsyncThunk("auth/register", async (payload) => {
+  const { data } = await api.post("/auth/register", payload);
+  return data;
+});
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState: {
+    user: initialUser ? JSON.parse(initialUser) : null,
+    accessToken: initialToken,
+    loading: false,
+    error: null,
+  },
+  reducers: {
+    logoutLocal: (state) => {
+      state.user = null;
+      state.accessToken = "";
+      localStorage.removeItem("peekpost_access_token");
+      localStorage.removeItem("peekpost_user");
+      setAuthToken("");
+      disconnectSocket();
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.accessToken = action.payload.accessToken;
+        localStorage.setItem("peekpost_access_token", action.payload.accessToken);
+        localStorage.setItem("peekpost_user", JSON.stringify(action.payload.user));
+        setAuthToken(action.payload.accessToken);
+        connectSocket(action.payload.accessToken);
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(register.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.accessToken = action.payload.accessToken;
+        localStorage.setItem("peekpost_access_token", action.payload.accessToken);
+        localStorage.setItem("peekpost_user", JSON.stringify(action.payload.user));
+        setAuthToken(action.payload.accessToken);
+        connectSocket(action.payload.accessToken);
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
+  },
+});
+
+export const { logoutLocal } = authSlice.actions;
+export default authSlice.reducer;
