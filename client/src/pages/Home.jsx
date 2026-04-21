@@ -5,21 +5,46 @@ import { fetchFeed } from "../redux/slices/feedSlice";
 import FeedPost from "../components/feed/FeedPost";
 import FeedAd from "../components/feed/FeedAd";
 
+/* ── SVG icons ─────────────────────────────────────────── */
+const HeartIcon = ({ filled }) => (
+  <svg viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+  </svg>
+);
+const CommentIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+  </svg>
+);
+const ShareIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+  </svg>
+);
+const BookmarkIcon = ({ filled }) => (
+  <svg viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
+  </svg>
+);
+const EmojiIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+  </svg>
+);
+
 const Home = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const { items, page, hasMore, loading } = useSelector((state) => state.feed);
   const [activeStoryIndex, setActiveStoryIndex] = useState(null);
+  const [storyReply, setStoryReply] = useState("");
 
-  useEffect(() => {
-    dispatch(fetchFeed(1));
-  }, [dispatch]);
+  useEffect(() => { dispatch(fetchFeed(1)); }, [dispatch]);
 
   const posts = useMemo(() => items.filter((item) => !item.isAd), [items]);
 
   const stories = useMemo(() => {
     const unique = new Map();
-
     for (const post of posts) {
       if (!post.author?._id || unique.has(post.author._id)) continue;
       unique.set(post.author._id, {
@@ -27,10 +52,8 @@ const Home = () => {
         avatar: post.author.avatar,
         media: post.media?.[0]?.url || `https://picsum.photos/seed/story-${post.author._id}/720/1280`,
       });
-
       if (unique.size >= 9) break;
     }
-
     if (!unique.size && user) {
       unique.set(user.id || "me", {
         username: user.username,
@@ -38,7 +61,6 @@ const Home = () => {
         media: "https://picsum.photos/seed/my-story/720/1280",
       });
     }
-
     return [...unique.values()];
   }, [posts, user]);
 
@@ -56,7 +78,9 @@ const Home = () => {
 
   return (
     <div className="ig-home-wrap">
+      {/* ── Feed column ── */}
       <section>
+        {/* Stories */}
         <div className="ig-stories">
           {stories.map((story, index) => (
             <div className="ig-story" key={story.username}>
@@ -74,9 +98,12 @@ const Home = () => {
           ))}
         </div>
 
+        {/* Feed posts */}
         <div className="ig-feed-list">
           {items.map((item) =>
-            item.isAd ? <FeedAd key={item._id} ad={item} /> : <FeedPost key={item._id} post={item} />,
+            item.isAd
+              ? <FeedAd key={item._id} ad={item} />
+              : <FeedPost key={item._id} post={item} />
           )}
 
           {hasMore && (
@@ -85,117 +112,134 @@ const Home = () => {
               type="button"
               disabled={loading}
               onClick={() => dispatch(fetchFeed(page + 1))}
+              style={{ width: "100%" }}
             >
-              {loading ? "Loading..." : "Load more posts"}
+              {loading ? "Loading…" : "Load more posts"}
             </button>
           )}
         </div>
       </section>
 
+      {/* ── Right sidebar ── */}
       <aside className="ig-suggest-panel">
+        {/* Me */}
         <div className="ig-suggest-me">
           <div className="ig-suggest-user">
             <img
-              src={user?.avatar || "https://placehold.co/64x64?text=U"}
+              className="ig-suggest-me-avatar"
+              src={user?.avatar || "https://placehold.co/80x80?text=U"}
               alt="me"
-              style={{ width: 56, height: 56, borderRadius: "50%", objectFit: "cover" }}
             />
             <div>
-              <div style={{ fontWeight: 700, fontSize: 14 }}>{user?.username}</div>
-              <div className="ig-muted" style={{ fontSize: 14 }}>
-                {user?.fullName || "Your account"}
-              </div>
+              <div className="ig-suggest-me-name">{user?.username}</div>
+              <div className="ig-suggest-me-handle">{user?.fullName || "Your account"}</div>
             </div>
           </div>
-          <span className="ig-link" style={{ fontSize: 12 }}>
-            Switch
-          </span>
+          <span className="ig-link">Switch</span>
         </div>
 
+        {/* Suggestions */}
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>
-          <strong className="ig-muted" style={{ fontSize: 14 }}>
-            Suggestions for you
-          </strong>
-          <span style={{ fontSize: 12, fontWeight: 700 }}>See All</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: "var(--tcl-muted)" }}>Suggested for you</span>
+          <span className="ig-link">See All</span>
         </div>
 
         <div className="ig-suggest-list">
-          {suggestions.map((suggestion) => (
-            <div className="ig-suggest-item" key={suggestion._id}>
-              <div className="ig-suggest-user">
+          {suggestions.map((s) => (
+            <div className="ig-suggest-item" key={s._id}>
+              <div className="ig-suggest-user" style={{ gap: 10 }}>
                 <img
-                  src={suggestion.avatar || "https://placehold.co/50x50?text=U"}
-                  alt={suggestion.username}
-                  style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover" }}
+                  className="ig-suggest-item-avatar"
+                  src={s.avatar || "https://placehold.co/50x50?text=U"}
+                  alt={s.username}
                 />
                 <div>
-                  <div style={{ fontWeight: 700 }}>{suggestion.username}</div>
-                  <div className="ig-muted">Followed by friends</div>
+                  <div className="ig-suggest-item-name">{s.username}</div>
+                  <div className="ig-suggest-item-detail">Suggested for you</div>
                 </div>
               </div>
               <span className="ig-link">Follow</span>
             </div>
           ))}
         </div>
+
+        {/* Footer */}
+        <div className="ig-footer-links">
+          <span>About</span><span>Help</span><span>Press</span><span>API</span>
+          <span>Privacy</span><span>Terms</span><span>Locations</span>
+          <br />
+          <span>© 2024 THE CURATED LENS FROM META</span>
+        </div>
       </aside>
 
+      {/* ── Story overlay ── */}
       {activeStory && (
-        <div className="ig-overlay" onClick={() => setActiveStoryIndex(null)}>
-          <button className="ig-close" type="button" onClick={() => setActiveStoryIndex(null)}>
-            x
+        <div className="ig-overlay" onClick={() => setActiveStoryIndex(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.88)", zIndex: 100 }}>
+          <button
+            style={{ position: "absolute", top: 20, right: 24, color: "#fff", fontSize: 26, background: "transparent", border: "none", cursor: "pointer", zIndex: 101 }}
+            type="button"
+            onClick={() => setActiveStoryIndex(null)}
+          >
+            ✕
           </button>
 
-          <div className="ig-story-viewer" onClick={(event) => event.stopPropagation()}>
+          <div className="ig-story-viewer" onClick={(e) => e.stopPropagation()}>
             <button
               type="button"
               className="ig-story-nav"
-              onClick={() =>
-                setActiveStoryIndex((previous) => (previous - 1 + stories.length) % stories.length)
-              }
+              onClick={() => setActiveStoryIndex((p) => (p - 1 + stories.length) % stories.length)}
             >
-              {'<'}
+              ‹
             </button>
 
             <div className="ig-story-card">
+              {/* Progress bars */}
               <div className="ig-story-progress">
-                <span />
-                <span />
-                <span />
+                {stories.map((_, i) => (
+                  <span key={i} className={i < activeStoryIndex ? "done" : ""} />
+                ))}
               </div>
-              <div className="ig-story-header" style={{ justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <img src={activeStory.avatar} alt={activeStory.username} style={{ width: 32, height: 32, borderRadius: '50%' }} />
-                  <strong>{activeStory.username}</strong>
-                  <span aria-label="Verified" style={{ display: 'inline-flex', marginLeft: 2 }}>
-                    <svg fill="#fff" height="12" viewBox="0 0 40 40" width="12"><path d="M19.998 3.094 14.638 0l-2.972 5.15H5.432v6.354L0 14.64 3.094 20 0 25.359l5.432 3.137v5.905h5.975L14.638 40l5.36-3.094L25.358 40l3.232-5.6h6.162v-6.01L40 25.359 36.905 20 40 14.641l-5.248-3.03v-6.46h-6.419L25.358 0l-5.36 3.094Zm7.415 11.225 2.254 2.287-11.43 11.5-6.835-6.93 2.244-2.258 4.587 4.581 9.18-9.18Z" fillRule="evenodd"></path></svg>
-                  </span>
-                  <span className="ig-muted" style={{ marginLeft: 4 }}>3h</span>
+
+              {/* Header */}
+              <div className="ig-story-header">
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <img
+                    src={activeStory.avatar || "https://placehold.co/60x60?text=U"}
+                    alt={activeStory.username}
+                    style={{ width: 32, height: 32, borderRadius: 8, objectFit: "cover" }}
+                  />
+                  <strong style={{ fontSize: 13 }}>{activeStory.username}</strong>
+                  <span style={{ fontSize: 12, opacity: 0.7 }}>3h</span>
                 </div>
-                <div style={{ display: 'flex', gap: 12, fontSize: 18 }}>
-                  <span>&#9654;</span>
-                  <span>&#128266;</span>
-                  <span>...</span>
+                <div style={{ display: "flex", gap: 14, opacity: 0.85, fontSize: 16 }}>
+                  <span>▶</span>
+                  <span>🔊</span>
+                  <span>•••</span>
                 </div>
               </div>
-              <img className="ig-story-media" src={activeStory.media} alt="story" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
-              
-              <div style={{ display: 'flex', gap: 16, alignItems: 'center', padding: '0 4px' }}>
-                <input 
-                  type="text" 
-                  placeholder={`Reply to ${activeStory.username}...`} 
-                  style={{ flex: 1, background: 'transparent', border: '1px solid rgba(255,255,255,0.4)', borderRadius: 24, padding: '10px 16px', color: '#fff', outline: 'none' }} 
+
+              {/* Media */}
+              <img className="ig-story-media" src={activeStory.media} alt="story" />
+
+              {/* Reply */}
+              <div className="ig-story-reply">
+                <input
+                  type="text"
+                  value={storyReply}
+                  onChange={(e) => setStoryReply(e.target.value)}
+                  placeholder={`Reply to ${activeStory.username}…`}
                 />
-                <span style={{ fontSize: 24, color: '#fff', cursor: 'pointer' }}>&#9825;</span>
-                <span style={{ fontSize: 24, color: '#fff', cursor: 'pointer' }}>&#10148;</span>
+                <span style={{ fontSize: 22, color: "#fff", cursor: "pointer" }}>♡</span>
+                <span style={{ fontSize: 22, color: "#fff", cursor: "pointer" }}>➤</span>
               </div>
             </div>
 
             <button
               type="button"
               className="ig-story-nav"
-              onClick={() => setActiveStoryIndex((previous) => (previous + 1) % stories.length)}
+              onClick={() => setActiveStoryIndex((p) => (p + 1) % stories.length)}
             >
-              {'>'}
+              ›
             </button>
           </div>
         </div>
