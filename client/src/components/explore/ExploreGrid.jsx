@@ -1,12 +1,12 @@
 const ExploreGrid = ({ items = [] }) => (
-  <section className="ig-explore-grid">
+  <section className="ig-explore-masonry">
     {items.map((item) => (
-      <div key={item._id} className="ig-post-tile">
+      <div key={item._id} className="ig-explore-item">
         <img
           src={item.isAd ? item.imageUrl : item.media?.[0]?.url}
           alt={item.title || item.caption || "explore item"}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
+        {/* Optional overlay for likes/comments can go here */}
       </div>
     ))}
   </section>

@@ -129,7 +129,11 @@ Fill in the following:
 - **Region:** Select closest to your users
 - **Build Command:** `npm install --prefix server && npm run build --prefix server`
 - **Start Command:** `node server/server.js`
+- **Root Directory:** Leave **BLANK** (don't enter anything)
+- **Publish Directory:** Leave **BLANK** (don't enter anything)
 - **Plan:** `Free` (or upgrade to `Starter` for better performance)
+
+⚠️ **Important:** Do NOT fill in Root Directory or Publish Directory - leave them completely blank!
 
 ### Step 4: Set Environment Variables
 
