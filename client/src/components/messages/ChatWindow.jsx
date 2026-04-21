@@ -17,7 +17,7 @@ const ChatWindow = ({ messages = [], draft, onDraftChange, onSend, currentUserId
         </div>
         <div className="ig-notification-canvas">
           <div>
-            <div style={{ fontSize: 62, marginBottom: 10 }}>?</div>
+            <div style={{ fontSize: 62, marginBottom: 10 }}>DM</div>
             <h2 style={{ margin: 0, fontWeight: 500 }}>Your Messages</h2>
             <p className="ig-muted">Send private photos and messages to a friend or group.</p>
             <button className="ig-btn-primary" type="button">
@@ -38,10 +38,10 @@ const ChatWindow = ({ messages = [], draft, onDraftChange, onSend, currentUserId
             Active 2h ago
           </div>
         </div>
-        <div style={{ display: "flex", gap: 14, fontSize: 24 }}>
-          <span>??</span>
-          <span>??</span>
-          <span>?</span>
+        <div style={{ display: "flex", gap: 14, fontSize: 14 }}>
+          <span>Call</span>
+          <span>Video</span>
+          <span>Info</span>
         </div>
       </div>
 
@@ -53,10 +53,10 @@ const ChatWindow = ({ messages = [], draft, onDraftChange, onSend, currentUserId
 
       <div className="ig-chat-compose">
         <div className="ig-chat-compose-shell">
-          <span style={{ fontSize: 22 }}>?</span>
+          <span style={{ fontSize: 14 }}>Emoji</span>
           <input value={draft} placeholder="Message..." onChange={(event) => onDraftChange(event.target.value)} />
-          <span style={{ fontSize: 22 }}>??</span>
-          <span style={{ fontSize: 22 }}>?</span>
+          <span style={{ fontSize: 14 }}>Image</span>
+          <span style={{ fontSize: 14 }}>Like</span>
           <button className="ig-link" type="button" style={{ border: 0, background: "transparent" }} onClick={onSend}>
             Post
           </button>

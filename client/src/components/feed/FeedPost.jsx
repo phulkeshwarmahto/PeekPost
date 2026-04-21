@@ -29,7 +29,7 @@ const FeedPost = ({ post }) => {
               <div className="ig-feed-sub">{post.location?.name || "PeekPost"}</div>
             </div>
           </div>
-          <span style={{ fontSize: 24 }}>?</span>
+          <span style={{ fontSize: 20 }}>...</span>
         </div>
 
         {media?.url && (
@@ -46,13 +46,13 @@ const FeedPost = ({ post }) => {
           </button>
         )}
 
-        <div className="ig-feed-actions">
+        <div className="ig-feed-actions" style={{ fontSize: 14 }}>
           <div className="ig-feed-actions-left">
-            <span>?</span>
-            <span>??</span>
-            <span>?</span>
+            <span>Like</span>
+            <span>Comment</span>
+            <span>Share</span>
           </div>
-          <span>??</span>
+          <span>Save</span>
         </div>
 
         <div className="ig-feed-meta">
@@ -72,15 +72,18 @@ const FeedPost = ({ post }) => {
       {open && (
         <div className="ig-overlay" onClick={() => setOpen(false)}>
           <button className="ig-close" type="button" onClick={() => setOpen(false)}>
-            ×
+            x
           </button>
 
           <div className="ig-post-modal" onClick={(event) => event.stopPropagation()}>
-            <div className="ig-post-modal-media">
+            <div className="ig-post-modal-media" style={{ position: 'relative' }}>
+              <button style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.8)', border: 0, width: 32, height: 32, borderRadius: '50%', fontSize: 18, cursor: 'pointer', zIndex: 10 }}>&#8249;</button>
+              <button style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.8)', border: 0, width: 32, height: 32, borderRadius: '50%', fontSize: 18, cursor: 'pointer', zIndex: 10 }}>&#8250;</button>
+              
               {media?.type === "video" ? (
-                <video src={media.url} controls autoPlay />
+                <video src={media.url} controls autoPlay style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               ) : (
-                <img src={media?.url} alt={post.caption || "post"} />
+                <img src={media?.url} alt={post.caption || "post"} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               )}
             </div>
 
@@ -94,7 +97,7 @@ const FeedPost = ({ post }) => {
                   />
                   <div className="ig-feed-username">{post.author?.username}</div>
                 </div>
-                <span style={{ fontSize: 24 }}>?</span>
+                <span style={{ fontSize: 20 }}>...</span>
               </div>
 
               <div className="ig-post-modal-comments">
@@ -126,21 +129,28 @@ const FeedPost = ({ post }) => {
               </div>
 
               <div>
-                <div className="ig-feed-actions">
-                  <div className="ig-feed-actions-left">
-                    <span>?</span>
-                    <span>??</span>
-                    <span>?</span>
+                <div className="ig-feed-actions" style={{ fontSize: 24, padding: '6px 16px 8px' }}>
+                  <div className="ig-feed-actions-left" style={{ gap: 16 }}>
+                    <span style={{ cursor: 'pointer' }}>&#9825;</span>
+                    <span style={{ cursor: 'pointer' }}>&#128488;</span>
+                    <span style={{ cursor: 'pointer' }}>&#10148;</span>
                   </div>
-                  <span>??</span>
+                  <span style={{ cursor: 'pointer' }}>&#128190;</span>
                 </div>
-                <div className="ig-feed-meta" style={{ paddingTop: 0 }}>
-                  <strong>Liked by {post.author?.username} and others</strong>
-                  <div className="ig-muted" style={{ fontSize: 12 }}>
+                <div className="ig-feed-meta" style={{ paddingTop: 0, paddingBottom: 6 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
+                    <img src="https://placehold.co/20x20?text=U" alt="liked by" style={{ width: 20, height: 20, borderRadius: '50%' }} />
+                    <span>Liked by <strong>{post.author?.username}</strong> and <strong>1,000 others</strong></span>
+                  </div>
+                  <div className="ig-muted" style={{ fontSize: 10, textTransform: 'uppercase', marginTop: 4 }}>
                     3 days ago
                   </div>
                 </div>
-                <div className="ig-feed-comment-box">Add a comment...</div>
+                <div className="ig-feed-comment-box" style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{ fontSize: 24 }}>&#9786;</span>
+                  <input type="text" placeholder="Add a comment..." style={{ border: 0, flex: 1, outline: 'none' }} />
+                  <span style={{ color: 'var(--ig-blue)', fontWeight: 600, cursor: 'pointer' }}>Post</span>
+                </div>
               </div>
             </div>
           </div>

@@ -162,12 +162,32 @@ const Home = () => {
                 <span />
                 <span />
               </div>
-              <div className="ig-story-header">
-                <img src={activeStory.avatar} alt={activeStory.username} />
-                <strong>{activeStory.username}</strong>
-                <span className="ig-muted">3h</span>
+              <div className="ig-story-header" style={{ justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <img src={activeStory.avatar} alt={activeStory.username} style={{ width: 32, height: 32, borderRadius: '50%' }} />
+                  <strong>{activeStory.username}</strong>
+                  <span aria-label="Verified" style={{ display: 'inline-flex', marginLeft: 2 }}>
+                    <svg fill="#fff" height="12" viewBox="0 0 40 40" width="12"><path d="M19.998 3.094 14.638 0l-2.972 5.15H5.432v6.354L0 14.64 3.094 20 0 25.359l5.432 3.137v5.905h5.975L14.638 40l5.36-3.094L25.358 40l3.232-5.6h6.162v-6.01L40 25.359 36.905 20 40 14.641l-5.248-3.03v-6.46h-6.419L25.358 0l-5.36 3.094Zm7.415 11.225 2.254 2.287-11.43 11.5-6.835-6.93 2.244-2.258 4.587 4.581 9.18-9.18Z" fillRule="evenodd"></path></svg>
+                  </span>
+                  <span className="ig-muted" style={{ marginLeft: 4 }}>3h</span>
+                </div>
+                <div style={{ display: 'flex', gap: 12, fontSize: 18 }}>
+                  <span>&#9654;</span>
+                  <span>&#128266;</span>
+                  <span>...</span>
+                </div>
               </div>
-              <img className="ig-story-media" src={activeStory.media} alt="story" />
+              <img className="ig-story-media" src={activeStory.media} alt="story" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+              
+              <div style={{ display: 'flex', gap: 16, alignItems: 'center', padding: '0 4px' }}>
+                <input 
+                  type="text" 
+                  placeholder={`Reply to ${activeStory.username}...`} 
+                  style={{ flex: 1, background: 'transparent', border: '1px solid rgba(255,255,255,0.4)', borderRadius: 24, padding: '10px 16px', color: '#fff', outline: 'none' }} 
+                />
+                <span style={{ fontSize: 24, color: '#fff', cursor: 'pointer' }}>&#9825;</span>
+                <span style={{ fontSize: 24, color: '#fff', cursor: 'pointer' }}>&#10148;</span>
+              </div>
             </div>
 
             <button

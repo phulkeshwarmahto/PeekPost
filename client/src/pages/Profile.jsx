@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import ProfileHeader from "../components/profile/ProfileHeader";
@@ -8,14 +9,18 @@ import { api } from "../services/api";
 
 const Profile = () => {
   const user = useSelector((state) => state.auth.user);
+  const { username } = useParams();
+  const targetUsername = username || user?.username;
+  const isOwnProfile = user?.username === targetUsername;
+
   const [profile, setProfile] = useState(null);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    if (!user?.username) return;
+    if (!targetUsername) return;
 
     const load = async () => {
-      const profileRes = await api.get(`/users/${user.username}`);
+      const profileRes = await api.get(`/users/${targetUsername}`);
       setProfile(profileRes.data);
 
       const postsRes = await api.get(`/posts/user/${profileRes.data.id}`);
@@ -23,7 +28,7 @@ const Profile = () => {
     };
 
     load();
-  }, [user?.username]);
+  }, [targetUsername]);
 
   if (!profile) {
     return <div className="card" style={{ padding: 20 }}>Loading profile...</div>;
@@ -31,7 +36,7 @@ const Profile = () => {
 
   return (
     <div className="ig-profile-wrap">
-      <ProfileHeader profile={profile} postsCount={posts.length} />
+      <ProfileHeader profile={profile} postsCount={posts.length} isOwnProfile={isOwnProfile} />
       <Highlights posts={posts} />
 
       <div className="ig-profile-tabs">

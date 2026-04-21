@@ -28,6 +28,7 @@ const Settings = () => {
     email: user?.email || "",
     phone: "+91 971",
     gender: "Prefer not to say",
+    suggestions: true,
     avatar: user?.avatar || "",
   });
 
@@ -70,6 +71,16 @@ const Settings = () => {
           <a className="ig-link" href="#switch">
             Switch to personal account
           </a>
+        </div>
+
+        <div className="ig-settings-pane" style={{ borderTop: "1px solid #dbdbdb" }}>
+           <h3 style={{ margin: 0, fontSize: 18, display: 'flex', alignItems: 'center', gap: 6 }}>
+             <span style={{ fontSize: 20, color: 'var(--ig-blue)' }}>∞ Meta</span>
+           </h3>
+           <p className="ig-link" style={{ fontSize: 16, marginTop: 8, marginBottom: 8, fontWeight: '700' }}>Accounts Center</p>
+           <p className="ig-muted" style={{ lineHeight: 1.3, fontSize: 12 }}>
+             Control settings for connected experiences across Instagram, the Facebook app and Messenger, including story and post sharing and logging in.
+           </p>
         </div>
       </aside>
 
@@ -141,6 +152,14 @@ const Settings = () => {
                 value={form.bio}
                 onChange={(event) => setForm((prev) => ({ ...prev, bio: event.target.value }))}
               />
+              <p className="ig-settings-help" style={{ textAlign: 'right' }}>0 / 150</p>
+              
+              <div style={{ marginTop: '30px' }}>
+                <strong style={{ color: 'var(--ig-muted)' }}>Personal information</strong>
+                <p className="ig-settings-help" style={{ marginTop: 4 }}>
+                  Provide your personal information, even if the account is used for a business, a pet or something else. This won't be a part of your public profile.
+                </p>
+              </div>
             </div>
           </div>
 
@@ -192,12 +211,36 @@ const Settings = () => {
           </div>
 
           <div className="ig-settings-row">
+            <label className="ig-settings-label" htmlFor="suggestions">
+              Show account suggestions on profiles
+            </label>
+            <div style={{ display: "flex", gap: "10px", alignItems: "flex-start", paddingTop: "8px" }}>
+              <input
+                id="suggestions"
+                type="checkbox"
+                checked={form.suggestions}
+                onChange={(event) => setForm((prev) => ({ ...prev, suggestions: event.target.checked }))}
+                style={{ marginTop: "4px" }}
+              />
+              <p className="ig-settings-help" style={{ margin: 0 }}>
+                <strong style={{ display: 'block', color: 'var(--ig-text)', fontSize: 13, lineHeight: 1.4 }}>
+                  Choose whether people can see similar account suggestions on your profile, and whether your account can be suggested on other profiles. <a href="#" style={{ color: 'var(--ig-blue)', textDecoration: 'none' }}>[?]</a>
+                </strong>
+              </p>
+            </div>
+          </div>
+
+          <div className="ig-settings-row">
             <span className="ig-settings-label" />
-            <div className="ig-settings-footer">
-              <button className="ig-btn-primary" type="submit">
+            <div className="ig-settings-footer" style={{ marginTop: '20px', justifyContent: 'space-between' }}>
+              <button className="ig-btn-primary" type="submit" style={{ padding: '6px 18px' }}>
                 Submit
               </button>
-              <button className="ig-btn-ghost" type="button" onClick={deactivate}>
+              <button 
+                type="button" 
+                onClick={deactivate}
+                style={{ border: 0, background: 'transparent', color: 'var(--ig-blue)', fontWeight: 700, padding: 0 }}
+              >
                 Temporarily deactivate my account
               </button>
             </div>
