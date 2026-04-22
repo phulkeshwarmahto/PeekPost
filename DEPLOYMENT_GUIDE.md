@@ -63,7 +63,7 @@ git push -u origin main
 Click **Environment Variables** and add:
 
 ```
-VITE_API_URL=https://YOUR_BACKEND_URL.onrender.com
+VITE_API_BASE_URL=https://YOUR_BACKEND_URL.onrender.com/api
 VITE_SOCKET_URL=https://YOUR_BACKEND_URL.onrender.com
 ```
 
@@ -188,7 +188,7 @@ After deploying the backend, update the frontend environment variables:
 1. In Vercel dashboard, go to **Settings** → **Environment Variables**
 2. Edit and update:
    ```
-   VITE_API_URL=https://peekpost-api.onrender.com
+   VITE_API_BASE_URL=https://peekpost-api.onrender.com/api
    VITE_SOCKET_URL=https://peekpost-api.onrender.com
    ```
 3. Redeploy: Click **Deployments** → **Redeploy** on the latest deployment
@@ -198,7 +198,7 @@ After deploying the backend, update the frontend environment variables:
 
 Check [client/src/services/api.js](client/src/services/api.js):
 ```javascript
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '/api';
 ```
 
 ---
@@ -406,7 +406,7 @@ DEBUG=peekpost:*
 
 **Solution:**
 1. Update `CLIENT_URL` in Render environment to match Vercel URL
-2. Add `VITE_API_URL` to Vercel environment
+2. Add `VITE_API_BASE_URL` to Vercel environment
 3. Redeploy both services
 
 ### Issue: Socket.io connection fails

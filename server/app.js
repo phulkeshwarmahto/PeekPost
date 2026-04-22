@@ -16,18 +16,12 @@ import exploreRoutes from "./routes/explore.routes.js";
 import premiumRoutes from "./routes/premium.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import { errorHandler, notFound } from "./middlewares/error.middleware.js";
+import { getAllowedOrigins, isAllowedOrigin } from "./utils/corsOrigins.js";
 
 export const app = express();
 
-const configuredOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter(Boolean);
-
-const isLocalDevOrigin = (origin) => /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
-
-const isAllowedOrigin = (origin) =>
-  configuredOrigins.includes(origin) || isLocalDevOrigin(origin);
+const allowedOrigins = getAllowedOrigins();
+console.log(`CORS allowlist: ${allowedOrigins.join(", ")}`);
 
 app.use(
   cors({
@@ -41,7 +35,9 @@ app.use(
         return callback(null, true);
       }
 
-      return callback(new Error(`CORS blocked for origin: ${origin}`));
+      return callback(
+        new Error(`CORS blocked for origin: ${origin}. Allowed origins: ${allowedOrigins.join(", ")}`),
+      );
     },
     credentials: true,
   }),

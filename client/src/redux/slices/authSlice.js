@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { api, setAuthToken } from "../../services/api";
+import { API_BASE_URL, api, setAuthToken } from "../../services/api";
 import { connectSocket, disconnectSocket } from "../../socket/socket";
 
 const initialToken = localStorage.getItem("peekpost_access_token") || "";
@@ -13,7 +13,7 @@ if (initialToken) {
 
 const getApiErrorMessage = (error) => {
   if (!error.response) {
-    return "Unable to reach server. Ensure backend is running on http://localhost:5000.";
+    return `Unable to reach server at ${API_BASE_URL}. Check frontend env VITE_API_BASE_URL (or VITE_API_URL) and backend CORS.`;
   }
 
   return error.response?.data?.message || error.message || "Something went wrong";

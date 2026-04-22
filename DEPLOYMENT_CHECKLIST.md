@@ -24,7 +24,7 @@
 - [ ] Output directory: `dist`
 
 ### Environment Variables (Vercel)
-- [ ] `VITE_API_URL` = (will update after backend deployment)
+- [ ] `VITE_API_BASE_URL` = (will update after backend deployment)
 - [ ] `VITE_SOCKET_URL` = (will update after backend deployment)
 
 ### Deployment

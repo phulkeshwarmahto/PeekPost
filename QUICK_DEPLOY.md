@@ -18,7 +18,7 @@ git push origin main
    - Build: `npm run build`
 4. Add environment:
    ```
-   VITE_API_URL=https://peekpost-api.onrender.com
+   VITE_API_BASE_URL=https://peekpost-api.onrender.com/api
    VITE_SOCKET_URL=https://peekpost-api.onrender.com
    ```
 5. Click Deploy → Wait for completion
@@ -62,7 +62,7 @@ git push origin main
 1. Go to Vercel Dashboard → Settings → Environment Variables
 2. Update:
    ```
-   VITE_API_URL=https://peekpost-api.onrender.com
+   VITE_API_BASE_URL=https://peekpost-api.onrender.com/api
    VITE_SOCKET_URL=https://peekpost-api.onrender.com
    ```
 3. Go to Deployments → Redeploy latest
@@ -109,7 +109,7 @@ NODE_ENV=production
 
 ### Frontend (Vercel)
 ```
-VITE_API_URL=https://peekpost-api.onrender.com
+VITE_API_BASE_URL=https://peekpost-api.onrender.com/api
 VITE_SOCKET_URL=https://peekpost-api.onrender.com
 ```
 
