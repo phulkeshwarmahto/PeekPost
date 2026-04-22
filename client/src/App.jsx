@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import Home from "./pages/Home.jsx";
 import Explore from "./pages/Explore.jsx";
@@ -12,7 +12,6 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Settings from "./pages/Settings.jsx";
 import Premium from "./pages/Premium.jsx";
-import { logoutLocal } from "./redux/slices/authSlice.js";
 import { prependPost } from "./redux/slices/feedSlice.js";
 import { api } from "./services/api.js";
 
@@ -80,7 +79,6 @@ const navItems = [
 ];
 
 const Sidebar = ({ onOpenCreate }) => {
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.accessToken);
   if (!token) return null;
@@ -122,14 +120,10 @@ const Sidebar = ({ onOpenCreate }) => {
       </nav>
 
       <div className="ig-nav-bottom">
-        <button
-          type="button"
-          className="ig-nav-item"
-          onClick={() => dispatch(logoutLocal())}
-        >
+        <NavLink to="/settings" className={({ isActive }) => `ig-nav-item${isActive ? " active" : ""}`}>
           <div className="ig-nav-icon-wrap"><MoreIcon /></div>
           <span className="ig-nav-label">More</span>
-        </button>
+        </NavLink>
       </div>
     </aside>
   );

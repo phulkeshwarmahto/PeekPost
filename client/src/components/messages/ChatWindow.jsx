@@ -50,24 +50,13 @@ const getAvatar = (conversation, currentUserId) => {
 };
 
 const ChatWindow = ({ messages = [], draft, onDraftChange, onSend, currentUserId, activeConversation }) => {
-  /* Inject mock conversation context if none provided (for static display matching) */
-  const displayConversation = activeConversation || {
-    _id: "mock1", 
-    participants: [{ _id: "elias", username: "elias_vogel", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" }]
-  };
-
-  const displayMessages = messages.length > 0 ? messages : [
-    { _id: "m1", sender: { _id: "elias", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" }, text: "Check out this gallery I visited today. The minimalism is perfect." },
-    { _id: "m2", sender: { _id: "elias", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" }, text: null, media: "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=600&h=400&fit=crop" },
-    { _id: "m3", sender: { _id: currentUserId }, text: "That architectural shot is incredible! The lighting is so clean.", seen: true },
-    { _id: "m4", sender: { _id: "elias", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" }, text: "Exactly. Thinking of trying something similar for my next series." },
-    { _id: "m5", sender: { _id: "elias", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" }, typing: true }
-  ];
-
-  if (!displayConversation) {
+  if (!activeConversation) {
     return (
       <section className="ig-chat-window">
-        <div className="ig-notification-canvas">Loading...</div>
+        <div className="ig-notification-canvas">
+          <h2 style={{ margin: 0 }}>Your message box is empty</h2>
+          <p className="ig-muted">Start a new chat and messages will appear here.</p>
+        </div>
       </section>
     );
   }
@@ -78,12 +67,12 @@ const ChatWindow = ({ messages = [], draft, onDraftChange, onSend, currentUserId
       <div className="ig-chat-head">
         <div className="ig-chat-head-user">
           <img
-            src={getAvatar(displayConversation, currentUserId)}
+            src={getAvatar(activeConversation, currentUserId)}
             alt="avatar"
             style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover" }}
           />
           <div>
-            <div style={{ fontWeight: 700, fontSize: 15 }}>{getConversationName(displayConversation, currentUserId)}</div>
+            <div style={{ fontWeight: 700, fontSize: 15 }}>{getConversationName(activeConversation, currentUserId)}</div>
             <div style={{ fontSize: 13, color: "#22c55e", display: "flex", alignItems: "center", gap: 4, marginTop: 2 }}>
               <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} /> Active Now
             </div>
@@ -100,7 +89,8 @@ const ChatWindow = ({ messages = [], draft, onDraftChange, onSend, currentUserId
       <div className="ig-chat-body">
         <div className="ig-chat-date-label">YESTERDAY</div>
         
-        {displayMessages.map((message) => (
+        {!messages.length && <div className="ig-muted">No messages yet. Say hello.</div>}
+        {messages.map((message) => (
           <MessageBubble key={message._id} message={message} own={message.sender?._id === currentUserId} />
         ))}
       </div>

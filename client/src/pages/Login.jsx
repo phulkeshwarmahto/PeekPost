@@ -7,8 +7,8 @@ import { login } from "../redux/slices/authSlice";
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [emailOrUsername, setEmailOrUsername] = useState("user1@peekpost.dev");
-  const [password, setPassword] = useState("password123");
+  const [emailOrUsername, setEmailOrUsername] = useState("");
+  const [password, setPassword] = useState("");
   const { loading, error } = useSelector((state) => state.auth);
 
   const submit = async (event) => {
@@ -42,6 +42,9 @@ const Login = () => {
             {loading ? "Signing in..." : "Log in"}
           </button>
         </form>
+        <p className="ig-muted" style={{ marginTop: 10, fontSize: 12 }}>
+          First time here? Create a profile in Sign up, then log in with any password.
+        </p>
 
         {error && <p style={{ color: "#d62976", marginTop: 12 }}>{error}</p>}
 

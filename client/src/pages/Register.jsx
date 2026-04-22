@@ -10,17 +10,20 @@ const Register = () => {
   const { loading, error } = useSelector((state) => state.auth);
 
   const [form, setForm] = useState({
-    username: "user1",
-    email: "user1@peekpost.dev",
-    password: "password123",
-    fullName: "User One",
+    username: "",
+    email: "",
+    password: "",
+    fullName: "",
   });
 
   const submit = async (event) => {
     event.preventDefault();
+    if (!form.email.trim() || !form.username.trim() || !form.fullName.trim() || !form.password.trim()) {
+      return;
+    }
     const result = await dispatch(register(form));
     if (!result.error) {
-      navigate("/");
+      navigate("/", { replace: true });
     }
   };
 

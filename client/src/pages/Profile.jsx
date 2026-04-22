@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import ProfileHeader from "../components/profile/ProfileHeader";
 import PostGrid from "../components/profile/PostGrid";
 import { api } from "../services/api";
+import { getStoredUsers, MOCK_POSTS } from "../utils/mockData";
 
 /* Demo profile for clean display when API is not accessible */
 const DEMO_PROFILE = {
@@ -39,6 +40,14 @@ const Profile = () => {
         const postsRes = await api.get(`/posts/user/${profileRes.data.id}`);
         setPosts(postsRes.data);
       } catch {
+        const localUser = getStoredUsers().find(
+          (item) => item.username?.toLowerCase() === targetUsername?.toLowerCase(),
+        );
+        if (localUser) {
+          setProfile(localUser);
+          setPosts(MOCK_POSTS.filter((post) => post.author?.username === localUser.username));
+          return;
+        }
         setError(true);
       }
     };

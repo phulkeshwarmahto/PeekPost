@@ -1,46 +1,111 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { API_BASE_URL, api, setAuthToken } from "../../services/api";
+import { api, setAuthToken } from "../../services/api";
 import { connectSocket, disconnectSocket } from "../../socket/socket";
+import { getStoredUsers, saveStoredUsers } from "../../utils/mockData";
 
 const initialToken = localStorage.getItem("peekpost_access_token") || "";
 const initialUser = localStorage.getItem("peekpost_user");
+const parsedInitialUser = (() => {
+  if (!initialUser || initialUser === "undefined") return null;
+  try {
+    return JSON.parse(initialUser);
+  } catch {
+    return null;
+  }
+})();
+
+const normalizeAuthPayload = (payload, fallbackUsername = "user") => {
+  if (!payload || typeof payload !== "object") return null;
+
+  const user = payload.user || payload.profile || payload.account || null;
+  const accessToken =
+    payload.accessToken || payload.token || payload.jwt || payload.authToken || "";
+
+  if (!user) return null;
+
+  return {
+    user,
+    accessToken: accessToken || `local-${fallbackUsername}-${Date.now()}`,
+  };
+};
 
 if (initialToken) {
   setAuthToken(initialToken);
   connectSocket(initialToken);
 }
 
-const getApiErrorMessage = (error) => {
-  if (!error.response) {
-    return `Unable to reach server at ${API_BASE_URL}. Check frontend env VITE_API_BASE_URL (or VITE_API_URL) and backend CORS.`;
-  }
-
-  return error.response?.data?.message || error.message || "Something went wrong";
-};
-
 export const login = createAsyncThunk("auth/login", async (payload, { rejectWithValue }) => {
   try {
     const { data } = await api.post("/auth/login", payload);
-    return data;
+    const normalized = normalizeAuthPayload(data, payload.emailOrUsername || "user");
+    if (!normalized) {
+      return rejectWithValue("Unexpected login response. Please try again.");
+    }
+    return normalized;
   } catch (error) {
-    return rejectWithValue(getApiErrorMessage(error));
+    const users = getStoredUsers();
+    const matcher = payload.emailOrUsername?.trim()?.toLowerCase();
+    const matched = users.find(
+      (user) =>
+        user.username?.toLowerCase() === matcher || user.email?.toLowerCase() === matcher,
+    );
+
+    if (!matched) {
+      return rejectWithValue("Create your profile first, then log in.");
+    }
+
+    return {
+      user: matched,
+      accessToken: `local-${matched.username}-${Date.now()}`,
+    };
   }
 });
 
 export const register = createAsyncThunk("auth/register", async (payload, { rejectWithValue }) => {
   try {
     const { data } = await api.post("/auth/register", payload);
-    return data;
+    const normalized = normalizeAuthPayload(data, payload.username || "user");
+    if (!normalized) {
+      return rejectWithValue("Unexpected signup response. Please log in.");
+    }
+    return normalized;
   } catch (error) {
-    return rejectWithValue(getApiErrorMessage(error));
+    const users = getStoredUsers();
+    const exists = users.some(
+      (user) =>
+        user.username?.toLowerCase() === payload.username?.toLowerCase() ||
+        user.email?.toLowerCase() === payload.email?.toLowerCase(),
+    );
+    if (exists) {
+      return rejectWithValue("Username or email already exists.");
+    }
+
+    const newUser = {
+      id: `u-${Date.now()}`,
+      _id: `u-${Date.now()}`,
+      username: payload.username,
+      email: payload.email,
+      password: payload.password,
+      fullName: payload.fullName,
+      avatar: `https://placehold.co/200x200?text=${payload.username?.[0]?.toUpperCase() || "U"}`,
+      bio: "",
+      followersCount: 0,
+      followingCount: 0,
+    };
+    saveStoredUsers([...users, newUser]);
+
+    return {
+      user: newUser,
+      accessToken: `local-${newUser.username}-${Date.now()}`,
+    };
   }
 });
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: initialUser ? JSON.parse(initialUser) : null,
+    user: parsedInitialUser,
     accessToken: initialToken,
     loading: false,
     error: null,
@@ -62,6 +127,11 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
+        if (!action.payload?.user) {
+          state.loading = false;
+          state.error = "Login response is missing user data.";
+          return;
+        }
         state.loading = false;
         state.user = action.payload.user;
         state.accessToken = action.payload.accessToken;
@@ -79,6 +149,11 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(register.fulfilled, (state, action) => {
+        if (!action.payload?.user) {
+          state.loading = false;
+          state.error = "Signup response is missing user data.";
+          return;
+        }
         state.loading = false;
         state.user = action.payload.user;
         state.accessToken = action.payload.accessToken;

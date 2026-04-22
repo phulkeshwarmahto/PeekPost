@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const GearIcon = () => (
@@ -43,12 +42,12 @@ const ProfileHeader = ({ profile, postsCount, isOwnProfile }) => (
           </>
         ) : (
           <>
-            <button className="ig-profile-btn" style={{ background: "var(--tcl-blue)", color: "#fff", border: "none" }} type="button">
-              Following ▾
+            <button className="ig-profile-btn ig-profile-btn-primary" type="button">
+              Follow
             </button>
             <button className="ig-profile-btn" type="button">Message</button>
-            <button className="ig-profile-btn" type="button">+👤</button>
-            <button type="button" style={{ background: "none", border: "none", fontSize: 20, color: "var(--tcl-muted)", cursor: "pointer" }}>
+            <button className="ig-profile-icon-btn" type="button">+ Person</button>
+            <button type="button" className="ig-profile-more-btn">
               •••
             </button>
           </>

@@ -1,9 +1,8 @@
 import NotificationItem from "./NotificationItem";
 
 const NotificationPanel = ({ items = [], onMarkAllRead }) => {
-  const yesterday = items.slice(0, 1);
-  const thisWeek = items.slice(1, 4);
-  const earlier = items.slice(4);
+  const unread = items.filter((item) => !item.read);
+  const read = items.filter((item) => item.read);
 
   return (
     <section className="ig-notification-drawer">
@@ -15,25 +14,17 @@ const NotificationPanel = ({ items = [], onMarkAllRead }) => {
       </div>
 
       <div className="ig-notification-section">
-        <h3 className="ig-notification-label">Yesterday</h3>
-        {yesterday.length === 0 && <p className="ig-muted">No activity yesterday.</p>}
-        {yesterday.map((item) => (
-          <NotificationItem key={item._id} item={item} />
-        ))}
-      </div>
-
-      <div className="ig-notification-section" style={{ borderTop: "1px solid #dbdbdb" }}>
-        <h3 className="ig-notification-label">This Week</h3>
-        {thisWeek.length === 0 && <p className="ig-muted">No activity this week.</p>}
-        {thisWeek.map((item) => (
+        <h3 className="ig-notification-label">Unread</h3>
+        {unread.length === 0 && <p className="ig-muted">All caught up.</p>}
+        {unread.map((item) => (
           <NotificationItem key={item._id} item={item} />
         ))}
       </div>
 
       <div className="ig-notification-section" style={{ borderTop: "1px solid #dbdbdb" }}>
         <h3 className="ig-notification-label">Earlier</h3>
-        {earlier.length === 0 && <p className="ig-muted">No older notifications.</p>}
-        {earlier.map((item) => (
+        {read.length === 0 && <p className="ig-muted">No older notifications.</p>}
+        {read.map((item) => (
           <NotificationItem key={item._id} item={item} />
         ))}
       </div>

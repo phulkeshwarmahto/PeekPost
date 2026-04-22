@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchFeed } from "../redux/slices/feedSlice";
 import FeedPost from "../components/feed/FeedPost";
 import FeedAd from "../components/feed/FeedAd";
+import { MOCK_POSTS } from "../utils/mockData";
 
 /* ── SVG icons ─────────────────────────────────────────── */
 const HeartIcon = ({ filled }) => (
@@ -39,9 +40,16 @@ const Home = () => {
   const [activeStoryIndex, setActiveStoryIndex] = useState(null);
   const [storyReply, setStoryReply] = useState("");
 
-  useEffect(() => { dispatch(fetchFeed(1)); }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchFeed(1))
+      .unwrap()
+      .catch(() => {
+        // Feed slice remains empty on API failure, fallback keeps homepage usable.
+      });
+  }, [dispatch]);
 
-  const posts = useMemo(() => items.filter((item) => !item.isAd), [items]);
+  const displayItems = items.length ? items : MOCK_POSTS;
+  const posts = useMemo(() => displayItems.filter((item) => !item.isAd), [displayItems]);
 
   const stories = useMemo(() => {
     const unique = new Map();
@@ -100,7 +108,7 @@ const Home = () => {
 
         {/* Feed posts */}
         <div className="ig-feed-list">
-          {items.map((item) =>
+          {displayItems.map((item) =>
             item.isAd
               ? <FeedAd key={item._id} ad={item} />
               : <FeedPost key={item._id} post={item} />

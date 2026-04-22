@@ -729,6 +729,27 @@ img { display: block; }
 }
 
 .ig-profile-btn:hover { background: var(--tcl-border); }
+.ig-profile-btn.ig-profile-btn-primary {
+  background: var(--tcl-blue);
+  color: #fff;
+  border-color: transparent;
+}
+.ig-profile-btn.ig-profile-btn-primary:hover { opacity: 0.9; background: var(--tcl-blue); }
+.ig-profile-icon-btn {
+  border-radius: var(--tcl-radius-sm);
+  background: var(--tcl-bg);
+  border: 1px solid var(--tcl-border);
+  padding: 7px 12px;
+  font-weight: 600;
+  font-size: 13px;
+}
+.ig-profile-more-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--tcl-muted);
+  cursor: pointer;
+}
 
 .ig-profile-stats {
   display: flex;
@@ -855,6 +876,41 @@ img { display: block; }
 }
 
 .ig-explore-search-bar input::placeholder { color: var(--tcl-muted); }
+.ig-search-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--tcl-surface);
+  border: 1px solid var(--tcl-border);
+  border-radius: 12px;
+  z-index: 10;
+  max-height: 320px;
+  overflow-y: auto;
+  box-shadow: var(--tcl-shadow);
+}
+.ig-search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  color: var(--tcl-text);
+}
+.ig-search-result-item:hover { background: var(--tcl-bg); }
+.ig-search-result-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.ig-search-result-username {
+  font-weight: 600;
+  font-size: 14px;
+}
+.ig-search-result-name {
+  font-size: 13px;
+  color: var(--tcl-muted);
+}
 
 .ig-explore-masonry {
   columns: 4;
@@ -1293,6 +1349,146 @@ img { display: block; }
 
 /* ─── Notifications ─────────────────────────────────────── */
 .ig-notifications-wrap { max-width: 600px; margin: 0 auto; padding: 28px 24px; }
+
+.ig-notifications-shell {
+  display: grid;
+  grid-template-columns: 430px 1fr;
+  min-height: 100vh;
+  background: var(--tcl-surface);
+}
+
+.ig-notification-drawer {
+  border-right: 1px solid var(--tcl-border);
+  padding: 22px;
+  overflow-y: auto;
+}
+
+.ig-notification-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.ig-notification-title {
+  margin: 0;
+  font-size: 22px;
+}
+
+.ig-notification-section {
+  padding: 14px 0;
+  display: grid;
+  gap: 10px;
+}
+
+.ig-notification-label {
+  color: var(--tcl-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.ig-notification-item {
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.ig-notification-item.unread {
+  background: #eef4ff;
+}
+
+.ig-notification-thumb {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ig-notification-main {
+  line-height: 1.4;
+}
+
+.ig-notification-canvas.modern {
+  background: linear-gradient(120deg, #f7faff, #ffffff);
+}
+
+.ig-notification-summary-card {
+  width: min(460px, 90%);
+  border: 1px solid var(--tcl-border);
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--tcl-shadow);
+  padding: 26px;
+  text-align: left;
+}
+.ig-notification-summary-card h3 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.ig-notification-stats {
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+}
+
+.ig-notification-stats div {
+  flex: 1;
+  background: var(--tcl-bg);
+  border-radius: 10px;
+  padding: 12px;
+  display: grid;
+  gap: 4px;
+}
+
+.ig-notification-stats strong {
+  font-size: 20px;
+}
+
+.ig-notification-stats span {
+  color: var(--tcl-muted);
+  font-size: 12px;
+}
+.ig-notification-tip {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--tcl-muted);
+}
+
+/* Reels */
+.ig-reels-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+}
+
+.ig-reel-active {
+  position: relative;
+  width: min(460px, 90vw);
+}
+
+.ig-reel-overlay {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+.ig-reel-author { font-weight: 700; font-size: 15px; }
+.ig-reel-caption { color: #242424; }
+
+.ig-reel-controls {
+  display: flex;
+  gap: 10px;
+}
+.ig-reel-hint {
+  font-size: 12px;
+  color: var(--tcl-muted);
+}
 
 /* ─── Misc ──────────────────────────────────────────────── */
 .grid-2 {

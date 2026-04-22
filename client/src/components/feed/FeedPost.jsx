@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { api } from "../../services/api";
 
 /* ── Icon helpers ──────────────────────────────────────── */
 const HeartIcon = ({ filled }) => (
@@ -38,6 +40,7 @@ const FeedPost = ({ post }) => {
   const [saved, setSaved]         = useState(false);
   const [comment, setComment]     = useState("");
   const [likeCount, setLikeCount] = useState(post.likes?.length || 0);
+  const [expandedCaption, setExpandedCaption] = useState(false);
 
   const mockComments = useMemo(() => [
     { id: 1, user: "organic_algorithm", avatar: null, text: "Love this shot. Clean framing.", time: "1d" },
@@ -47,9 +50,31 @@ const FeedPost = ({ post }) => {
 
   const media = post.media?.[0];
 
-  const handleLike = () => {
+  const handleLike = async () => {
     setLiked((prev) => !prev);
     setLikeCount((prev) => liked ? prev - 1 : prev + 1);
+    try {
+      await api.post(`/posts/${post._id}/like`);
+    } catch {
+      // Revert on failure
+      setLiked((prev) => !prev);
+      setLikeCount((prev) => !liked ? prev - 1 : prev + 1);
+    }
+  };
+
+  const handleSave = async () => {
+    setSaved((prev) => !prev);
+    try {
+      await api.post(`/posts/${post._id}/save`);
+    } catch {
+      setSaved((prev) => !prev);
+    }
+  };
+
+  const handleShare = () => {
+    const url = `${window.location.origin}/post/${post._id}`;
+    navigator.clipboard.writeText(url);
+    alert("Post link copied to clipboard!");
   };
 
   const timeAgo = new Date(post.createdAt || Date.now()).toLocaleDateString("en-US", {
@@ -67,8 +92,10 @@ const FeedPost = ({ post }) => {
               src={post.author?.avatar || "https://placehold.co/64x64?text=U"}
               alt={post.author?.username}
             />
-            <div>
-              <div className="ig-feed-username">{post.author?.username}</div>
+              <div>
+                <Link to={`/profile/${post.author?.username}`} className="ig-feed-username">
+                  {post.author?.username}
+                </Link>
               <div className="ig-feed-sub">{post.location?.name || "3 mins ago"}</div>
             </div>
           </div>
@@ -101,11 +128,11 @@ const FeedPost = ({ post }) => {
             <button className="ig-feed-actions-btn" type="button" title="Comment" onClick={() => setOpen(true)}>
               <CommentIcon />
             </button>
-            <button className="ig-feed-actions-btn" type="button" title="Share">
+            <button className="ig-feed-actions-btn" type="button" title="Share" onClick={handleShare}>
               <ShareIcon />
             </button>
           </div>
-          <button className="ig-feed-actions-btn" type="button" onClick={() => setSaved((s) => !s)} title="Save">
+          <button className="ig-feed-actions-btn" type="button" onClick={handleSave} title="Save">
             <BookmarkIcon filled={saved} />
           </button>
         </div>
@@ -114,8 +141,17 @@ const FeedPost = ({ post }) => {
         <div className="ig-feed-meta">
           <div className="ig-feed-likes">{likeCount.toLocaleString()} likes</div>
           <div className="ig-feed-caption">
-            <strong>{post.author?.username}</strong>
-            {post.caption}
+            <Link to={`/profile/${post.author?.username}`} style={{ marginRight: 6, fontWeight: 700 }}>
+              {post.author?.username}
+            </Link>
+            {post.caption?.length > 100 && !expandedCaption ? (
+              <>
+                {post.caption.slice(0, 100)}...{" "}
+                <span className="ig-link ig-muted" onClick={() => setExpandedCaption(true)}>more</span>
+              </>
+            ) : (
+              post.caption
+            )}
           </div>
           {(post.comments?.length > 0 || mockComments.length > 0) && (
             <div className="ig-feed-comments-link" onClick={() => setOpen(true)}>
@@ -227,11 +263,11 @@ const FeedPost = ({ post }) => {
                     <button className="ig-feed-actions-btn" type="button">
                       <CommentIcon />
                     </button>
-                    <button className="ig-feed-actions-btn" type="button">
+                    <button className="ig-feed-actions-btn" type="button" onClick={handleShare}>
                       <ShareIcon />
                     </button>
                   </div>
-                  <button className="ig-feed-actions-btn" type="button" onClick={() => setSaved((s) => !s)}>
+                  <button className="ig-feed-actions-btn" type="button" onClick={handleSave}>
                     <BookmarkIcon filled={saved} />
                   </button>
                 </div>
