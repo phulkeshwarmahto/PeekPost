@@ -11,14 +11,30 @@ if (initialToken) {
   connectSocket(initialToken);
 }
 
-export const login = createAsyncThunk("auth/login", async (payload) => {
-  const { data } = await api.post("/auth/login", payload);
-  return data;
+const getApiErrorMessage = (error) => {
+  if (!error.response) {
+    return "Unable to reach server. Ensure backend is running on http://localhost:5000.";
+  }
+
+  return error.response?.data?.message || error.message || "Something went wrong";
+};
+
+export const login = createAsyncThunk("auth/login", async (payload, { rejectWithValue }) => {
+  try {
+    const { data } = await api.post("/auth/login", payload);
+    return data;
+  } catch (error) {
+    return rejectWithValue(getApiErrorMessage(error));
+  }
 });
 
-export const register = createAsyncThunk("auth/register", async (payload) => {
-  const { data } = await api.post("/auth/register", payload);
-  return data;
+export const register = createAsyncThunk("auth/register", async (payload, { rejectWithValue }) => {
+  try {
+    const { data } = await api.post("/auth/register", payload);
+    return data;
+  } catch (error) {
+    return rejectWithValue(getApiErrorMessage(error));
+  }
 });
 
 const authSlice = createSlice({
@@ -56,7 +72,7 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message;
       })
       .addCase(register.pending, (state) => {
         state.loading = true;
@@ -73,7 +89,7 @@ const authSlice = createSlice({
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message;
       });
   },
 });

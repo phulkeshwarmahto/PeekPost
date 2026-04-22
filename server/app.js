@@ -19,11 +19,30 @@ import { errorHandler, notFound } from "./middlewares/error.middleware.js";
 
 export const app = express();
 
-const allowedOrigin = process.env.CLIENT_URL || "http://localhost:5173";
+const configuredOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const isLocalDevOrigin = (origin) => /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+
+const isAllowedOrigin = (origin) =>
+  configuredOrigins.includes(origin) || isLocalDevOrigin(origin);
 
 app.use(
   cors({
-    origin: allowedOrigin,
+    origin(origin, callback) {
+      // Allow non-browser tools and same-origin requests with no Origin header.
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (isAllowedOrigin(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true,
   }),
 );

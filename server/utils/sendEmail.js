@@ -26,10 +26,19 @@ export const sendEmail = async ({ to, subject, html }) => {
     return;
   }
 
-  await transporter.sendMail({
-    from: process.env.EMAIL_FROM || "no-reply@peekpost.app",
-    to,
-    subject,
-    html,
-  });
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_FROM || "no-reply@peekpost.app",
+      to,
+      subject,
+      html,
+    });
+  } catch (error) {
+    console.warn("Email send failed:", error.message);
+
+    // Do not block critical auth flows in development because SMTP is often optional.
+    if (process.env.NODE_ENV !== "development") {
+      throw error;
+    }
+  }
 };

@@ -1,0 +1,3 @@
+MongoDB connected
+Server running on port 5001
+[0mPOST /api/auth/register [32m201[0m 3203.847 ms - 647[0m
