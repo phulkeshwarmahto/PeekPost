@@ -9,7 +9,9 @@ export const connectSocket = (token) => {
     return socketInstance;
   }
 
-  socketInstance = io(import.meta.env.VITE_SOCKET_URL || "http://localhost:5000", {
+  const socketUrl = import.meta.env.VITE_SOCKET_URL || window.location.origin;
+
+  socketInstance = io(socketUrl, {
     auth: { token },
   });
 
